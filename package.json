@@ -4,12 +4,21 @@
   "description": "API for cinema website",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon server.js"
   },
   "repository": {
     "type": "git",
     "url": "https://github.coventry.ac.uk/304CEM-1718OCTJAN/5457955-BackEnd.git"
   },
   "author": "Cameron Gough",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "nodemon": "^1.12.1"
+  },
+  "dependencies": {
+    "express": "^4.16.2",
+    "mongoose": "^4.12.1",
+    "passport": "^0.4.0"
+  }
 }
