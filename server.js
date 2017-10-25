@@ -2,25 +2,41 @@ var express = require('express'),
   app = express(),
   port = process.env.PORT || 3000,
   mongoose = require('mongoose'),
-  Movie = require('./api/models/movieModel'), //created model loading here
-  bodyParser = require('body-parser');
+  passport = require('passport'),
+  morgan = require('morgan'),
+  bodyParser = require('body-parser'),
+  session = require('express-session'),
+  mongoDBStore = require('connect-mongodb-session')(session);
 
-// mongoose instance connection url connection
-mongoose.Promise = global.Promise;
+// mongoose connection
+mongoose.Promise = require('bluebird');
 mongoose.connect('mongodb://localhost/cinema', {
-  useMongoClient: true,
+  useMongoClient: true
 });
 
+// require('./config/passport')(passport);
 
-app.use(bodyParser.urlencoded({ extended: true }));
+//app.use(morgan('dev'));
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: true}));
+//app.use(cookieParser());
 
+//Sessions for passport
+//app.use(session({ secret: 'cinema'})); // Session secret (Will be changed to be a bit more secure, hopefully)
+//app.use(passport.initialize());
+//app.use(passport.session()); // persistent login sessions
+//app.use(flash()); //
 
-var routes = require('./api/routes/movieRoutes'); //importing route
-routes(app); //register the route
+//API Models
+var Movie = require('./api/models/movieModel'),
+  User = require('./api/models/userModel');
 
+//API Routes
+var movieRoutes = require('./api/routes/movieRoutes');
+movieRoutes(app);
+var userRoutes = require('./api/routes/userRoutes');
+userRoutes(app);
 
 app.listen(port);
-
 
 console.log('cinema RESTful API server started on: ' + port);
