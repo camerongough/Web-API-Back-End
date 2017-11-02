@@ -5,8 +5,10 @@ var express = require('express'),
   passport = require('passport'),
   morgan = require('morgan'),
   bodyParser = require('body-parser'),
-  session = require('express-session'),
-  mongoDBStore = require('connect-mongodb-session')(session);
+  jsonwebtoken = require("jsonwebtoken"),
+  config = require('./config/config');
+//session = require('express-session'),
+//mongoDBStore = require('connect-mongodb-session')(session);
 
 // mongoose connection
 mongoose.Promise = require('bluebird');
@@ -14,22 +16,32 @@ mongoose.connect('mongodb://localhost/cinema', {
   useMongoClient: true
 });
 
-// require('./config/passport')(passport);
+//require('./config/passport')(passport);
 
 //app.use(morgan('dev'));
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: true}));
-//app.use(cookieParser());
+app.use(bodyParser.urlencoded({
+  extended: true
+}));
 
-//Sessions for passport
-//app.use(session({ secret: 'cinema'})); // Session secret (Will be changed to be a bit more secure, hopefully)
 //app.use(passport.initialize());
-//app.use(passport.session()); // persistent login sessions
-//app.use(flash()); //
 
 //API Models
 var Movie = require('./api/models/movieModel'),
   User = require('./api/models/userModel');
+
+  app.use(function(req, res, next) {
+    if (req.headers && req.headers.authorization && req.headers.authorization.split(' ')[0] === 'JWT') {
+      jsonwebtoken.verify(req.headers.authorization.split(' ')[1], config.secret, function(err, decode) {
+        if (err) req.user = undefined;
+        req.user = decode;
+        next();
+      });
+    } else {
+      req.user = undefined;
+      next();
+    }
+  });
 
 //API Routes
 var movieRoutes = require('./api/routes/movieRoutes');

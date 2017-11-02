@@ -1,5 +1,4 @@
 'use strict';
-
 var mongoose = require('mongoose'),
   Movies = mongoose.model('Movies');
 
@@ -20,6 +19,7 @@ exports.add_a_movie = function(req, res) {
   });
 };
 
+
 exports.read_a_movie = function(req, res) {
   Movies.findById(req.params.movieId, function(err, movie) {
     if (err)
@@ -30,7 +30,11 @@ exports.read_a_movie = function(req, res) {
 
 
 exports.update_a_movie = function(req, res) {
-  Movies.findOneAndUpdate({_id: req.params.movieId}, req.body, {new: true}, function(err, movie) {
+  Movies.findOneAndUpdate({
+    _id: req.params.movieId
+  }, req.body, {
+    new: true
+  }, function(err, movie) {
     if (err)
       res.send(err);
     res.json(movie);
@@ -44,6 +48,8 @@ exports.delete_a_movie = function(req, res) {
   }, function(err, movie) {
     if (err)
       res.send(err);
-    res.json({ message: 'Movies successfully deleted' });
+    res.json({
+      message: 'Movies successfully deleted'
+    });
   });
 };

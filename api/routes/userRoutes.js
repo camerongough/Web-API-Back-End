@@ -4,13 +4,10 @@ module.exports = function(app) {
 
   // user Routes
   app.route('/register')
-    .post(user.register_user);
+    .post(user.registerUser);
 
-  //app.route('/login')
-  //.post(user.login);
-
-  //app.route('/user/:email')
-  //.get(user.user_account);
+  app.route('/login')
+  .post(user.loginUser);
 
   //app.get('/logout')
     //.get(user.logout_user);

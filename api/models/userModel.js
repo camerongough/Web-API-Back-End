@@ -1,5 +1,6 @@
 var mongoose = require('mongoose');
 var bcrypt = require('bcrypt');
+var jwt = require('jsonwebtoken');
 
 var UserSchema = new mongoose.Schema({
   email: {
@@ -46,5 +47,25 @@ UserSchema.pre('save', function(next) {
     next();
   })
 });
+
+//verifing the password from the database against what the user enters
+UserSchema.methods.verifyPassword = function(password, callback) {
+  bcrypt.compare(password, this.password, function(err, isMatch){
+    //console.log('Password checked');
+    if(err) return callback(err);
+    callback(null, isMatch);
+  });
+};
+
+// userSchema.methods.generateJwt = function() {
+//   var expiry = new Date();
+//   expiry.setDate(expiry.getDate() + 7);
+//
+//   return jwt.sign({
+//     _id: this._id,
+//     email: this.email,
+//     exp: parseInt(expiry.getTime() / 1000),
+//   }, "MY_SECRET"); // DO NOT KEEP YOUR SECRET IN THE CODE!
+// };
 
 module.exports = mongoose.model('User', UserSchema);
