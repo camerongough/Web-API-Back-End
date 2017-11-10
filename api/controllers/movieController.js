@@ -2,7 +2,7 @@
 var mongoose = require('mongoose'),
   Movies = mongoose.model('Movies');
 
-exports.list_all_movies = function(req, res) {
+exports.showAllMovies = function(req, res) {
   Movies.find({}, function(err, movie) {
     if (err)
       res.send(err);
@@ -10,7 +10,7 @@ exports.list_all_movies = function(req, res) {
   });
 };
 
-exports.add_a_movie = function(req, res) {
+exports.addMovie = function(req, res) {
   var new_movie = new Movies(req.body);
   new_movie.save(function(err, movie) {
     if (err)
@@ -20,7 +20,7 @@ exports.add_a_movie = function(req, res) {
 };
 
 
-exports.read_a_movie = function(req, res) {
+exports.showMovie = function(req, res) {
   Movies.findById(req.params.movieId, function(err, movie) {
     if (err)
       res.send(err);
@@ -29,9 +29,9 @@ exports.read_a_movie = function(req, res) {
 };
 
 
-exports.update_a_movie = function(req, res) {
+exports.updateMovie = function(req, res) {
   Movies.findOneAndUpdate({
-    _id: req.params.movieId
+    _id: req.params.movie_id
   }, req.body, {
     new: true
   }, function(err, movie) {
@@ -42,14 +42,14 @@ exports.update_a_movie = function(req, res) {
 };
 
 
-exports.delete_a_movie = function(req, res) {
+exports.deleteMovie = function(req, res) {
   Movies.remove({
-    _id: req.params.movieId
+    _id: req.params.movie_id
   }, function(err, movie) {
     if (err)
       res.send(err);
     res.json({
-      message: 'Movies successfully deleted'
+      message: 'Movie successfully deleted'
     });
   });
 };

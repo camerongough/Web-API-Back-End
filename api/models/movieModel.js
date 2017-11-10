@@ -34,7 +34,15 @@ var MoviesSchema = new Schema({
   homepage: {
     type: String,
     default: ""
-  }
+  },
+  director: {
+    type: String,
+    default: ""
+  },
+  cast: [{
+    type: String,
+    default: ""
+  }],
 });
 
 module.exports = mongoose.model('Movies', MoviesSchema);

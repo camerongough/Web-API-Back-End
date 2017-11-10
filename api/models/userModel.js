@@ -36,6 +36,10 @@ var UserSchema = new mongoose.Schema({
 
 });
 
+//watch_list: [{movie_title: String, movie_id: Number}],
+//fav_list: [{movie_title: String, movie_id: Number}],
+
+
 //hashing a password before saving it to the database
 UserSchema.pre('save', function(next) {
   var user = this;
