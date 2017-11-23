@@ -1,9 +1,7 @@
 'use strict';
 var mongoose = require('mongoose');
-var Schema = mongoose.Schema;
 
-
-var MoviesSchema = new Schema({
+var MoviesSchema = new mongoose.Schema({
   movie_id: {
     type: Number,
     default: 0

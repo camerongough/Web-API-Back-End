@@ -6,4 +6,12 @@ module.exports = function(app) {
   app.route('/api/v1/user/:userId')
     .get(auth.authorize, user.findUserById);
 
+  // app.route('/api/v1/user/favourite_list')
+  //   .get(user.getFavMovieList)
+  //   .post(user.addToFavMovieList);
+  //
+  // app.route('/api/v1/user/watch_list')
+  //   .get(user.getWatchList)
+  //   .post(user.addToWatchList);
+
 };

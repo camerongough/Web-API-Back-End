@@ -1,7 +1,6 @@
 'use strict';
 module.exports = function(app) {
   var auth = require('../controllers/authController');
-  var user = require('../controllers/userController');
 
   // auth Routes
   app.route('/api/v1/auth/register')
@@ -12,5 +11,8 @@ module.exports = function(app) {
 
   app.route('/api/v1/auth/status')
     .get(auth.authorize, auth.checkStatus);
+
+  app.route('/api/v1/auth/logout')
+    .post(auth.logout);
 
 };
