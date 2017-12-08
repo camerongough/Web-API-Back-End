@@ -1,14 +1,24 @@
 'use strict';
 module.exports = function(app) {
-  var movies = require('../controllers/movieController');
+	var movies = require('../controllers/movieController');
 
-  // movie Routes
-  app.route('/api/v1/movies')
-    .post(movies.addMovie)
-    .get(movies.showAllMovies);
+	// movie Routes
+	app
+		.route('/api/v1/movies')
+		.post(movies.addMovie)
+		.get(movies.showAllMovies);
 
-  app.route('/api/v1/movies/:movieId')
-    .get(movies.showMovie)
-    .put(movies.updateMovie)
-    .delete(movies.deleteMovie);
+	app
+		.route('/api/v1/movies/find_id')
+		.get(movies.findMovieFromMovieDB);
+
+	app
+		.route('/api/v1/movies/get_details')
+		.get(movies.getMovieDetailsFromMovieDB);
+
+	app
+		.route('/api/v1/movies/:movieId')
+		.get(movies.showMovie)
+		.put(movies.updateMovie)
+		.delete(movies.deleteMovie);
 };

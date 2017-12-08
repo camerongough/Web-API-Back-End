@@ -1,6 +1,7 @@
 require('dotenv').load();
 
 module.exports = {
-  'secret': process.env.SECRET,
-  'database': 'mongodb://localhost/cinema'
+	dbUserPassword: process.env.DBUSERPASSWORD,
+	secret: process.env.SECRET,
+	database: 'mongodb://localhost/cinema'
 };

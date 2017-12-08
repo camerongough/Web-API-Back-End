@@ -2,9 +2,9 @@
   "name": "cinema",
   "version": "1.0.0",
   "description": "API for cinema website",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jasmine",
     "start": "nodemon server.js"
   },
   "repository": {
@@ -14,6 +14,8 @@
   "author": "Cameron Gough",
   "license": "ISC",
   "devDependencies": {
+    "jasmine": "^2.8.0",
+    "jsdoc": "^3.5.5",
     "nodemon": "^1.12.1"
   },
   "dependencies": {
@@ -30,12 +32,10 @@
     "express-session": "^1.15.6",
     "jsonwebtoken": "^8.1.0",
     "jwt-blacklist": "0.0.2",
-    "lodash": "^4.17.4",
     "mongoose": "^4.12.1",
+    "mongoose-dateonly": "^1.0.4",
     "morgan": "^1.9.0",
-    "passport": "^0.4.0",
-    "passport-http": "^0.3.0",
-    "passport-local": "^1.0.0",
-    "request": "^2.83.0"
+    "request": "^2.83.0",
+    "request-promise": "^4.2.2"
   }
 }
