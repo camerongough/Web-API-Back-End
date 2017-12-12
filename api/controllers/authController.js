@@ -1,4 +1,8 @@
 'use strict';
+/**
+ * Auth Controller
+ * @module authController
+ */
 var jwt = require('jsonwebtoken'),
 	jwtBlacklist = require('jwt-blacklist')(jwt),
 	db = require('../../config/database'),
@@ -16,8 +20,9 @@ var jwt = require('jsonwebtoken'),
 // };
 /**
 * Registers User
-* @param {object} User
-* @returns {object} user
+* @param {object} User - User Object
+* @return {object} user - User Object
+* @return {status}
 * @throws {error} err
 */
 exports.registerUser = function(req, res) {
@@ -39,8 +44,9 @@ exports.registerUser = function(req, res) {
 
 /**
 * Authorizes users
-* @param {string} authorization
-* @returns {object} decoded
+* @param {string} authorization - Authorization header
+* @return {object} decoded - Decoded token
+* @return {status}
 * @throws {error} err
 */
 exports.authorize = function(req, res, next) {
@@ -59,14 +65,17 @@ exports.authorize = function(req, res, next) {
 			}
 		});
 	} else {
-		return res.status(403).send('Not authorized');
+		return res.status(403).json({
+			message: 'Not authorized'
+		});
 	}
 };
 
 /**
 * Check if admin
-* @param {string} authorization
-* @return {object} decoded
+* @param {string} authorization - Authorization header
+* @return {object} decoded - Decoded token
+* @return {status}
 * @throws {error} err
 */
 exports.isAdmin = function(req, res, next){
@@ -101,8 +110,8 @@ exports.isAdmin = function(req, res, next){
 
 /**
 * Creates a JWT token
-* @param {object} user
-* @returns {string} token
+* @param {object} user - User Object
+* @return {string} token - JWT token with email and role as payload
 */
 var createToken = function(user) {
 	return jwtBlacklist.sign({ email: user.email, role: user.role }, config.secret, {
@@ -112,9 +121,9 @@ var createToken = function(user) {
 
 /**
 * Login user
-* @param {string} email
-* @param {string} password
-* @returns {string} token
+* @param {string} email - User Email
+* @param {string} password - User Password
+* @return {string} token - JWT token
 * @throws {error} err
 */
 exports.loginUser = function(req, res) {
@@ -158,8 +167,8 @@ exports.checkStatus = function(req, res) {
 };
 /**
 * Logout User and Blacklists JWT Token
-* @param {string} authorization
-* @returns {object} status, message
+* @param {string} authorization - Authorization header
+* @returns {status} 
 * @throws {error} err
 */
 exports.logout = function(req, res) {

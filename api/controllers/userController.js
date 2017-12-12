@@ -1,5 +1,8 @@
 'use strict';
-
+/**
+ * User Controller
+ * @module userController
+ */
 var mongoose = require('mongoose'),
 	db = require('../../config/database'),
 	config = require('../../config/config'),
@@ -7,8 +10,8 @@ var mongoose = require('mongoose'),
 
 /**
 * Find User by ID
-* @param {string} userId
-* @returns {object} user
+* @param {string} userId - User ID
+* @returns {object} user - User Object
 * @throws {error} err
 */
 exports.findUserById = function(req, res) {
@@ -28,13 +31,14 @@ exports.findUserById = function(req, res) {
 
 /**
 * Find User by Email
-* @param {string} email
-* @returns {object} user
+* @param {string} email - User Email
+* @return {object} user - User Object
+* @return {status}
 * @throws {error} err
 */
 exports.findUserByEmail = function(req, res) {
 	db.connect(config.database);
-	User.find({ email: req.body.email })
+	User.find({ email: req.query.email })
 		.then(function(user) {
 			res.status(200).json({
 				status: 'success',
@@ -49,9 +53,10 @@ exports.findUserByEmail = function(req, res) {
 
 /**
 * Add Movie to User Favourites List
-* @param {string} userId
-* @param {string} movieId
-* @returns {object} user
+* @param {string} userId - User ID
+* @param {string} movieId - Movie ID
+* @return {object} user - User Object
+* @return {status}
 * @throws {error} err
 */
 exports.addToFavList = function(req, res) {
@@ -65,7 +70,7 @@ exports.addToFavList = function(req, res) {
 			res.status(201).json({
 				status: 'success',
 				data: user,
-				message: 'Added movie to Favs List'
+				message: 'Added movie to favourites list'
 			});
 		}
 	);
@@ -73,8 +78,8 @@ exports.addToFavList = function(req, res) {
 
 /**
 * Get User Favourites List
-* @param {string} userId
-* @returns {array} favList
+* @param {string} userId - User ID
+* @return {array} favList - User Favourite Movies List
 * @throws {error} err
 */
 exports.getFavList = function(req, res) {
@@ -85,7 +90,7 @@ exports.getFavList = function(req, res) {
 			res.status(200).json({
 				status: 'success',
 				data: favList,
-				message: 'Recieved User Fav List'
+				message: 'Recieved User Favourite Movies List'
 			});
 		})
 		.catch(function(err) {
@@ -95,9 +100,9 @@ exports.getFavList = function(req, res) {
 
 /**
 * Remove Movie from User Favourites List
-* @param {string} userId
-* @param {string} movieId
-* @returns {object} user
+* @param {string} userId - User ID
+* @param {string} movieId - Movie ID
+* @return {object} user - User Object
 * @throws {error} err
 */
 exports.removeFromFavList = function(req, res) {
@@ -110,7 +115,7 @@ exports.removeFromFavList = function(req, res) {
 			res.status(200).json({
 				status: 'success',
 				data: user,
-				message: 'Removed Movie from Fav List'
+				message: 'Removed Movie from Favourites List'
 			});
 		}
 	);
@@ -118,9 +123,9 @@ exports.removeFromFavList = function(req, res) {
 
 /**
 * Add Movie to User Watch List
-* @param {string} userId
-* @param {string} movieId
-* @returns {object} user
+* @param {string} userId - User ID
+* @param {string} movieId - Movie ID
+* @return {object} user - User Object
 * @throws {error} err
 */
 exports.addToWatchList = function(req, res) {
@@ -142,8 +147,8 @@ exports.addToWatchList = function(req, res) {
 
 /**
 * Get User Watch List
-* @param {string} userId
-* @returns {array} watchList
+* @param {string} userId - User ID
+* @return {array} watchList - User Watch List
 * @throws {error} err
 */
 exports.getWatchList = function(req, res) {
@@ -164,9 +169,9 @@ exports.getWatchList = function(req, res) {
 
 /**
 * Remove Movie from User Watch List
-* @param {string} userId
-* @param {string} movieId
-* @returns {object} user
+* @param {string} userId - User ID
+* @param {string} movieId - Movie ID
+* @return {object} user - User Object
 * @throws {error} err
 */
 exports.removeFromWatchList = function(req, res) {
@@ -187,8 +192,8 @@ exports.removeFromWatchList = function(req, res) {
 
 /**
 * Delete User
-* @param {string} userId
-* @returns {object} status, message
+* @param {string} userId - User ID
+* @return {status}
 * @throws {error} err
 */
 exports.deleteUser = function(req, res) {

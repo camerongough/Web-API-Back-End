@@ -1,4 +1,8 @@
 'use strict';
+/**
+ * Movie Controller
+ * @module movieController
+ */
 var mongoose = require('mongoose'),
 	Movies = mongoose.model('Movies'),
 	db = require('../../config/database'),
@@ -6,12 +10,12 @@ var mongoose = require('mongoose'),
 	rp = require('request-promise');
 
 /**
-* Gets movie id from MovieDB
-* @param {string} movie
-* @param {number} year
-* @returns {object} movieId, title
-* @throws {error} err
-*/
+ * Gets movie ID from MovieDB
+ * @param {string} movie - Movie Name
+ * @param {number} year - Year Movie was Released
+ * @returns {object} movieId, title - The movie ID and Title
+ * @throws {error} err
+ */
 exports.findMovieFromMovieDB = function(req, res) {
 	var movieName = req.query.movie;
 	var yearOf = req.query.year;
@@ -49,11 +53,11 @@ exports.findMovieFromMovieDB = function(req, res) {
 };
 
 /**
-* Gets movie details from MovieDB
-* @param {number} movieId
-* @returns {object} movie
-* @throws {error} err
-*/
+ * Gets movie details from MovieDB
+ * @param {number} movieId - The Movie ID from The MovieDB
+ * @returns {object} movie - The full details of the movie
+ * @throws {error} err
+ */
 exports.getMovieDetailsFromMovieDB = function(req, res) {
 	var options = {
 		method: 'GET',
@@ -129,10 +133,11 @@ exports.getMovieDetailsFromMovieDB = function(req, res) {
 };
 
 /**
-* Shows all movies
-* @returns {object} movie
-* @throws {error} err
-*/
+ * Shows all movies
+ * @return {status} success
+ * @return {object} movie - All Movie Ojects
+ * @throws {error} err
+ */
 exports.showAllMovies = function(req, res) {
 	db.connect(config.database);
 	Movies.find(req.query)
@@ -149,11 +154,12 @@ exports.showAllMovies = function(req, res) {
 };
 
 /**
-* Adds new movie to the database
-* @param {object} Movies
-* @return {object} movie
-* @throws {error} err
-*/
+ * Adds new movie to the database
+ * @param {object} Movies - Movie Object defined in Movie Schema
+ * @return {status} success
+ * @return {object} movie
+ * @throws {error} err
+ */
 exports.addMovie = function(req, res) {
 	db.connect(config.database);
 	var newMovie = new Movies(req.body);
@@ -167,16 +173,16 @@ exports.addMovie = function(req, res) {
 			});
 		})
 		.catch(function(err) {
-			res.send(err);
+			res.status(401).send(err);
 		});
 };
 
 /**
-* Returns a movies
-* @param {string} movieId -
-* @returns {object} movie
-* @throws {error} err
-*/
+ * Returns a Movie
+ * @param {string} movieId - Movie ID
+ * @returns {object} movie - Movie Details
+ * @throws {error} err
+ */
 exports.showMovie = function(req, res) {
 	db.connect(config.database);
 	Movies.findById(req.params.movieId)
@@ -193,12 +199,42 @@ exports.showMovie = function(req, res) {
 };
 
 /**
-* Updates a movies
-* @param {string} movieId
-* @param {object} movies
-* @returns {object} movie
+* Search for movie title
+* @param {string} movie - Movie title
+* @return {object} movie - Movie (or movies) that match title
+* @return {status}
 * @throws {error} err
 */
+exports.searchMovieTitle = function(req, res) {
+	db.connect(config.database);
+	Movies.find({ $text: { $search: req.query.movie } })
+		.then(function(movie) {
+			if (movie.length < 1) {
+				res.status(200).json({
+					status: 'failed',
+					message: 'Movie title not found'
+				});
+			} else {
+				res.status(200).json({
+					status: 'success',
+					movie: movie,
+					message: 'Searched for movie title'
+				});
+			}
+		})
+		.catch(function(err) {
+			return res.send(err);
+		});
+};
+
+/**
+ * Updates a movies
+ * @param {string} movieId - Movie ID
+ * @param {object} movie - Updated Movie Object
+ * @return {object} movie - Updated Movie Details
+ * @return {status}
+ * @throws {error} err
+ */
 exports.updateMovie = function(req, res) {
 	db.connect(config.database);
 	Movies.findOneAndUpdate(
@@ -206,7 +242,7 @@ exports.updateMovie = function(req, res) {
 		req.body,
 		{ new: true },
 		function(movie, err) {
-			if (err) return res.send(err);
+			if (err) return res.status(401).send(err);
 			res.status(200).json({
 				status: 'success',
 				movie: movie,
@@ -217,15 +253,15 @@ exports.updateMovie = function(req, res) {
 };
 
 /**
-* Deletes a Movies
-* @param {string} movieId
-* @returns {object} status, message
-* @throws {error} err
-*/
+ * Deletes a Movies
+ * @param {string} movieId - Movie ID
+ * @return {status} success
+ * @throws {error} err
+ */
 exports.deleteMovie = function(req, res) {
 	db.connect(config.database);
 	Movies.findByIdAndRemove({ _id: req.params.movieId }, function(err) {
-		if (err) res.send(err);
+		if (err) res.status(401).send(err);
 		res.status(200).json({
 			status: 'success',
 			message: 'Movie deleted successfully'

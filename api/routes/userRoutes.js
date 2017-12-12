@@ -4,16 +4,21 @@ module.exports = function(app) {
 	var auth = require('../controllers/authController');
 
 	app
+		.route('api/v1/user/:email')
+		.get(auth.authorize, user.findUserByEmail);
+		
+	app
 		.route('/api/v1/user/:userId')
 		.get(auth.authorize, user.findUserById)
 		.delete(user.deleteUser);
 	//.patch(auth.authorize, user.updateUserDetails)
 
+	app
+		.route('/api/v1/user/:userId/favourite_list')
+		.get(user.getFavList)
+		.post(user.addToFavList)
+		.put(user.removeFromFavList);
 
-	// app.route('/api/v1/user/:userId/favourite_list')
-	//   .get(user.getFavMovieList)
-	//   .post(user.addToFavMovieList);
-	//
 	app
 		.route('/api/v1/user/:userId/watch_list')
 		.get(user.getWatchList)

@@ -9,7 +9,13 @@ module.exports = function(app) {
 		.post(auth.isAdmin, movies.addMovie)
 		.get(movies.showAllMovies);
 
-	app.route('/api/v1/movies/find_id').get(movies.findMovieFromMovieDB);
+	app
+		.route('/api/v1/movies/search')
+		.get(movies.searchMovieTitle);
+
+	app
+		.route('/api/v1/movies/find_id')
+		.get(movies.findMovieFromMovieDB);
 
 	app
 		.route('/api/v1/movies/get_details')

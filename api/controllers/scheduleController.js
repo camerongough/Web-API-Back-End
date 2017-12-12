@@ -1,4 +1,8 @@
 'use strict';
+/**
+ * Schedule Controller
+ * @module scheduleController
+ */
 var mongoose = require('mongoose'),
 	Schedule = mongoose.model('Schedule'),
 	db = require('../../config/database'),
@@ -6,8 +10,9 @@ var mongoose = require('mongoose'),
 
 /**
 * Add movie schedule
-* @param {object} Schedule
-* @return {object} schedule
+* @param {object} Schedule - Schedule Object
+* @return {object} schedule - Schedule Object
+* @return {status}
 * @throws {error} err
 */
 exports.addMovieSchedule = function(req, res) {
@@ -29,7 +34,8 @@ exports.addMovieSchedule = function(req, res) {
 
 /**
 * Show all movie schedules
-* @returns {object} schedule
+* @return {object} schedule - Schedule Object
+* @return {status}
 * @throws {error} err
 */
 exports.showAllSchedules = function(req, res) {
@@ -49,8 +55,9 @@ exports.showAllSchedules = function(req, res) {
 
 /**
 * Show move schedule
-* @param {string} movieId
-* @returns {object} movieSchedule
+* @param {string} movieId - Movie ID
+* @return {object} movieSchedule - Schedule Object matching with Movie ID
+* @return {status}
 * @throws {error} err
 */
 exports.showMovieSchedule = function(req, res) {

@@ -22,7 +22,7 @@
 <label for="nav-trigger" class="overlay"></label>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#addMovie">addMovie</a></li><li><a href="global.html#addMovieSchedule">addMovieSchedule</a></li><li><a href="global.html#addToFavList">addToFavList</a></li><li><a href="global.html#addToWatchList">addToWatchList</a></li><li><a href="global.html#authorize">authorize</a></li><li><a href="global.html#createToken">createToken</a></li><li><a href="global.html#deleteMovie">deleteMovie</a></li><li><a href="global.html#deleteUser">deleteUser</a></li><li><a href="global.html#findMovieFromMovieDB">findMovieFromMovieDB</a></li><li><a href="global.html#findUserByEmail">findUserByEmail</a></li><li><a href="global.html#findUserById">findUserById</a></li><li><a href="global.html#forgotPassword">forgotPassword</a></li><li><a href="global.html#getFavList">getFavList</a></li><li><a href="global.html#getMovieDetailsFromMovieDB">getMovieDetailsFromMovieDB</a></li><li><a href="global.html#getWatchList">getWatchList</a></li><li><a href="global.html#isAdmin">isAdmin</a></li><li><a href="global.html#loginUser">loginUser</a></li><li><a href="global.html#logout">logout</a></li><li><a href="global.html#registerUser">registerUser</a></li><li><a href="global.html#removeFromFavList">removeFromFavList</a></li><li><a href="global.html#removeFromWatchList">removeFromWatchList</a></li><li><a href="global.html#showAllMovies">showAllMovies</a></li><li><a href="global.html#showAllSchedules">showAllSchedules</a></li><li><a href="global.html#showMovie">showMovie</a></li><li><a href="global.html#showMovieSchedule">showMovieSchedule</a></li><li><a href="global.html#updateMovie">updateMovie</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-authController.html">authController</a><ul class='methods'><li data-type='method'><a href="module-authController.html#.authorize">authorize</a></li><li data-type='method'><a href="module-authController.html#.forgotPassword">forgotPassword</a></li><li data-type='method'><a href="module-authController.html#.isAdmin">isAdmin</a></li><li data-type='method'><a href="module-authController.html#.loginUser">loginUser</a></li><li data-type='method'><a href="module-authController.html#.logout">logout</a></li><li data-type='method'><a href="module-authController.html#.registerUser">registerUser</a></li><li data-type='method'><a href="module-authController.html#~createToken">createToken</a></li></ul></li><li><a href="module-movieController.html">movieController</a><ul class='methods'><li data-type='method'><a href="module-movieController.html#.addMovie">addMovie</a></li><li data-type='method'><a href="module-movieController.html#.deleteMovie">deleteMovie</a></li><li data-type='method'><a href="module-movieController.html#.findMovieFromMovieDB">findMovieFromMovieDB</a></li><li data-type='method'><a href="module-movieController.html#.getMovieDetailsFromMovieDB">getMovieDetailsFromMovieDB</a></li><li data-type='method'><a href="module-movieController.html#.searchMovieTitle">searchMovieTitle</a></li><li data-type='method'><a href="module-movieController.html#.showAllMovies">showAllMovies</a></li><li data-type='method'><a href="module-movieController.html#.showMovie">showMovie</a></li><li data-type='method'><a href="module-movieController.html#.updateMovie">updateMovie</a></li></ul></li><li><a href="module-scheduleController.html">scheduleController</a><ul class='methods'><li data-type='method'><a href="module-scheduleController.html#.addMovieSchedule">addMovieSchedule</a></li><li data-type='method'><a href="module-scheduleController.html#.showAllSchedules">showAllSchedules</a></li><li data-type='method'><a href="module-scheduleController.html#.showMovieSchedule">showMovieSchedule</a></li></ul></li><li><a href="module-userController.html">userController</a><ul class='methods'><li data-type='method'><a href="module-userController.html#.addToFavList">addToFavList</a></li><li data-type='method'><a href="module-userController.html#.addToWatchList">addToWatchList</a></li><li data-type='method'><a href="module-userController.html#.deleteUser">deleteUser</a></li><li data-type='method'><a href="module-userController.html#.findUserByEmail">findUserByEmail</a></li><li data-type='method'><a href="module-userController.html#.findUserById">findUserById</a></li><li data-type='method'><a href="module-userController.html#.getFavList">getFavList</a></li><li data-type='method'><a href="module-userController.html#.getWatchList">getWatchList</a></li><li data-type='method'><a href="module-userController.html#.removeFromFavList">removeFromFavList</a></li><li data-type='method'><a href="module-userController.html#.removeFromWatchList">removeFromWatchList</a></li></ul></li></ul>
 </nav>
 
 <div id="main">
@@ -38,6 +38,10 @@
     <section>
         <article>
             <pre class="prettyprint source linenums"><code>'use strict';
+/**
+ * Movie Controller
+ * @module movieController
+ */
 var mongoose = require('mongoose'),
 	Movies = mongoose.model('Movies'),
 	db = require('../../config/database'),
@@ -45,12 +49,12 @@ var mongoose = require('mongoose'),
 	rp = require('request-promise');
 
 /**
-* Gets movie id from MovieDB
-* @param {string} movie
-* @param {number} year
-* @returns {object} movieId, title
-* @throws {error} err
-*/
+ * Gets movie ID from MovieDB
+ * @param {string} movie - Movie Name
+ * @param {number} year - Year Movie was Released
+ * @returns {object} movieId, title - The movie ID and Title
+ * @throws {error} err
+ */
 exports.findMovieFromMovieDB = function(req, res) {
 	var movieName = req.query.movie;
 	var yearOf = req.query.year;
@@ -88,11 +92,11 @@ exports.findMovieFromMovieDB = function(req, res) {
 };
 
 /**
-* Gets movie details from MovieDB
-* @param {number} movieId
-* @returns {object} movie
-* @throws {error} err
-*/
+ * Gets movie details from MovieDB
+ * @param {number} movieId - The Movie ID from The MovieDB
+ * @returns {object} movie - The full details of the movie
+ * @throws {error} err
+ */
 exports.getMovieDetailsFromMovieDB = function(req, res) {
 	var options = {
 		method: 'GET',
@@ -168,10 +172,11 @@ exports.getMovieDetailsFromMovieDB = function(req, res) {
 };
 
 /**
-* Shows all movies
-* @returns {object} movie
-* @throws {error} err
-*/
+ * Shows all movies
+ * @return {status} success
+ * @return {object} movie - All Movie Ojects
+ * @throws {error} err
+ */
 exports.showAllMovies = function(req, res) {
 	db.connect(config.database);
 	Movies.find(req.query)
@@ -188,11 +193,12 @@ exports.showAllMovies = function(req, res) {
 };
 
 /**
-* Adds new movie to the database
-* @param {object} Movies
-* @return {object} movie
-* @throws {error} err
-*/
+ * Adds new movie to the database
+ * @param {object} Movies - Movie Object defined in Movie Schema
+ * @return {status} success
+ * @return {object} movie
+ * @throws {error} err
+ */
 exports.addMovie = function(req, res) {
 	db.connect(config.database);
 	var newMovie = new Movies(req.body);
@@ -206,16 +212,16 @@ exports.addMovie = function(req, res) {
 			});
 		})
 		.catch(function(err) {
-			res.send(err);
+			res.status(401).send(err);
 		});
 };
 
 /**
-* Returns a movies
-* @param {string} movieId -
-* @returns {object} movie
-* @throws {error} err
-*/
+ * Returns a Movie
+ * @param {string} movieId - Movie ID
+ * @returns {object} movie - Movie Details
+ * @throws {error} err
+ */
 exports.showMovie = function(req, res) {
 	db.connect(config.database);
 	Movies.findById(req.params.movieId)
@@ -232,12 +238,42 @@ exports.showMovie = function(req, res) {
 };
 
 /**
-* Updates a movies
-* @param {string} movieId
-* @param {object} movies
-* @returns {object} movie
+* Search for movie title
+* @param {string} movie - Movie title
+* @return {object} movie - Movie (or movies) that match title
+* @return {status}
 * @throws {error} err
 */
+exports.searchMovieTitle = function(req, res) {
+	db.connect(config.database);
+	Movies.find({ $text: { $search: req.query.movie } })
+		.then(function(movie) {
+			if (movie.length &lt; 1) {
+				res.status(200).json({
+					status: 'failed',
+					message: 'Movie title not found'
+				});
+			} else {
+				res.status(200).json({
+					status: 'success',
+					movie: movie,
+					message: 'Searched for movie title'
+				});
+			}
+		})
+		.catch(function(err) {
+			return res.send(err);
+		});
+};
+
+/**
+ * Updates a movies
+ * @param {string} movieId - Movie ID
+ * @param {object} movie - Updated Movie Object
+ * @return {object} movie - Updated Movie Details
+ * @return {status}
+ * @throws {error} err
+ */
 exports.updateMovie = function(req, res) {
 	db.connect(config.database);
 	Movies.findOneAndUpdate(
@@ -245,7 +281,7 @@ exports.updateMovie = function(req, res) {
 		req.body,
 		{ new: true },
 		function(movie, err) {
-			if (err) return res.send(err);
+			if (err) return res.status(401).send(err);
 			res.status(200).json({
 				status: 'success',
 				movie: movie,
@@ -256,15 +292,15 @@ exports.updateMovie = function(req, res) {
 };
 
 /**
-* Deletes a Movies
-* @param {string} movieId
-* @returns {object} status, message
-* @throws {error} err
-*/
+ * Deletes a Movies
+ * @param {string} movieId - Movie ID
+ * @return {status} success
+ * @throws {error} err
+ */
 exports.deleteMovie = function(req, res) {
 	db.connect(config.database);
 	Movies.findByIdAndRemove({ _id: req.params.movieId }, function(err) {
-		if (err) res.send(err);
+		if (err) res.status(401).send(err);
 		res.status(200).json({
 			status: 'success',
 			message: 'Movie deleted successfully'
@@ -283,7 +319,7 @@ exports.deleteMovie = function(req, res) {
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Tue Dec 12 2017 16:43:57 GMT+0000 (GMT) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Tue Dec 12 2017 20:23:38 GMT+0000 (GMT) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>
