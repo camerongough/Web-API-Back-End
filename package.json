@@ -5,7 +5,8 @@
   "main": "server.js",
   "scripts": {
     "test": "jasmine",
-    "start": "nodemon server.js"
+    "start": "nodemon server.js",
+		"generate-docs": "node_modules/.bin/jsdoc -c jsdoc.json"
   },
   "repository": {
     "type": "git",
@@ -14,11 +15,13 @@
   "author": "Cameron Gough",
   "license": "ISC",
   "devDependencies": {
+    "docdash": "^0.4.0",
     "jasmine": "^2.8.0",
     "jsdoc": "^3.5.5",
     "nodemon": "^1.12.1"
   },
   "dependencies": {
+    "@sendgrid/mail": "^6.1.4",
     "bcrypt": "^1.0.3",
     "bluebird": "^3.5.1",
     "connect-flash": "^0.1.1",

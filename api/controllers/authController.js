@@ -33,16 +33,17 @@ exports.registerUser = function(req, res) {
 };
 
 exports.authorize = function(req, res, next) {
-	db.connect(config.database);
 	var token = req.headers.authorization;
 	if (token) {
 		jwtBlacklist.verify(token, config.secret, function(err, decoded) {
 			if (err) {
-				res.send(err);
-				return res.status(403).send('Error authorizing token');
+				return res.status(403).json({
+					status: 'failed',
+					message: 'Error authorizing token',
+					error: err
+				});
 			} else {
 				req.token = decoded;
-				res.send(decoded);
 				return next();
 			}
 		});
@@ -51,8 +52,38 @@ exports.authorize = function(req, res, next) {
 	}
 };
 
+exports.isAdmin = function(req, res, next){
+	var token = req.headers.authorization;
+	if (token) {
+		jwtBlacklist.verify(token, config.secret, function(err, decoded) {
+			if (err) {
+				return res.status(403).json({
+					status: 'failed',
+					message: 'Error authorizing token',
+					error: err
+				});
+			} else {
+				if (decoded.role != 'admin') {
+					res.status(401).json({
+						status: 'failed',
+						message: 'Not authorized'
+					});
+				}else{
+					req.token = decoded;
+					return next();
+				}
+			}
+		});
+	} else {
+		return res.status(403).json({
+			status: 'failed',
+			message: 'Not authorized'
+		});
+	}
+};
+
 var createToken = function(user) {
-	return jwtBlacklist.sign({ email: user.email }, config.secret, {
+	return jwtBlacklist.sign({ email: user.email, role: user.role }, config.secret, {
 		expiresIn: '24h'
 	});
 };

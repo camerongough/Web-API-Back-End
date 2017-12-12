@@ -8,12 +8,6 @@ var express = require('express'),
 	morgan = require('morgan'),
 	bodyParser = require('body-parser');
 
-// mongoose connection
-// mongoose.Promise = require('bluebird');
-// mongoose.connect('mongodb://localhost/cinema', {
-//   useMongoClient: true
-// });
-
 var options = {
 	cert: fs.readFileSync('./sslcert/fullchain.pem'),
 	key: fs.readFileSync('./sslcert/privkey.pem')

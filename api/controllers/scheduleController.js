@@ -42,7 +42,11 @@ exports.showMovieSchedule = function(req, res) {
 	Schedule.find({ movie_id: req.params.movieId }, function(err, movieSchedule) {
 		if (err) res.send(err);
 
-		res.json(movieSchedule);
+		res.status(200).json({
+			status: 'status',
+			schedule: movieSchedule,
+			message: 'Retrieved Movie Schedule'
+		});
 	});
 	// Schedule.find({movie_id: req.params.movieId})
 	//   .then(function(shedule) {

@@ -38,9 +38,9 @@ var UserSchema = new mongoose.Schema({
 		type: Array,
 		default: []
 	},
-	admin: {
-		type: Boolean,
-		default: false
+	role: {
+		type: String,
+		default: 'user'
 	}
 });
 
@@ -56,10 +56,9 @@ UserSchema.pre('save', function(next) {
 	});
 });
 
-//verifing the password from the database against what the user enters
+//Verifing the password from the database against what the user enters
 UserSchema.methods.verifyPassword = function(password, callback) {
 	bcrypt.compare(password, this.password, function(err, isMatch) {
-		//console.log('Password checked');
 		if (err) return callback(err);
 		callback(null, isMatch);
 	});

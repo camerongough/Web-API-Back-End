@@ -35,6 +35,55 @@ exports.findUserByEmail = function(req, res) {
 		});
 };
 
+exports.addToFavList = function(req, res) {
+	db.connect(config.database);
+	var movieList = { movieId: req.body.movieId };
+	User.findByIdAndUpdate(
+		{ _id: req.params.userId },
+		{ $push: { favList: movieList } },
+		function(user, err) {
+			if (err) res.send(err);
+			res.status(201).json({
+				status: 'success',
+				data: user,
+				message: 'Added movie to Favs List'
+			});
+		}
+	);
+};
+
+exports.getFavList = function(req, res) {
+	db.connect(config.database);
+	User.findById(req.params.userId)
+		.then(function(user) {
+			var favList = user.favList;
+			res.status(200).json({
+				status: 'success',
+				data: favList,
+				message: 'Recieved User Fav List'
+			});
+		})
+		.catch(function(err) {
+			return res.send(err);
+		});
+};
+
+exports.removeFromFavList = function(req, res) {
+	db.connect(config.database);
+	User.findByIdAndUpdate(
+		{ _id: req.params.userId },
+		{ $pull: { favList: { movieId: req.body.movieId } } },
+		function(user, err) {
+			if (err) res.send(err);
+			res.status(200).json({
+				status: 'success',
+				data: user,
+				message: 'Removed Movie from Fav List'
+			});
+		}
+	);
+};
+
 exports.addToWatchList = function(req, res) {
 	db.connect(config.database);
 	var movieList = { movieId: req.body.movieId };
