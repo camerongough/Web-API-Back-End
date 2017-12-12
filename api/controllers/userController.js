@@ -5,6 +5,12 @@ var mongoose = require('mongoose'),
 	config = require('../../config/config'),
 	User = mongoose.model('User');
 
+/**
+* Find User by ID
+* @param {string} userId
+* @returns {object} user
+* @throws {error} err
+*/
 exports.findUserById = function(req, res) {
 	db.connect(config.database);
 	User.findById(req.params.userId)
@@ -20,6 +26,12 @@ exports.findUserById = function(req, res) {
 		});
 };
 
+/**
+* Find User by Email
+* @param {string} email
+* @returns {object} user
+* @throws {error} err
+*/
 exports.findUserByEmail = function(req, res) {
 	db.connect(config.database);
 	User.find({ email: req.body.email })
@@ -35,6 +47,13 @@ exports.findUserByEmail = function(req, res) {
 		});
 };
 
+/**
+* Add Movie to User Favourites List
+* @param {string} userId
+* @param {string} movieId
+* @returns {object} user
+* @throws {error} err
+*/
 exports.addToFavList = function(req, res) {
 	db.connect(config.database);
 	var movieList = { movieId: req.body.movieId };
@@ -52,6 +71,12 @@ exports.addToFavList = function(req, res) {
 	);
 };
 
+/**
+* Get User Favourites List
+* @param {string} userId
+* @returns {array} favList
+* @throws {error} err
+*/
 exports.getFavList = function(req, res) {
 	db.connect(config.database);
 	User.findById(req.params.userId)
@@ -68,6 +93,13 @@ exports.getFavList = function(req, res) {
 		});
 };
 
+/**
+* Remove Movie from User Favourites List
+* @param {string} userId
+* @param {string} movieId
+* @returns {object} user
+* @throws {error} err
+*/
 exports.removeFromFavList = function(req, res) {
 	db.connect(config.database);
 	User.findByIdAndUpdate(
@@ -84,6 +116,13 @@ exports.removeFromFavList = function(req, res) {
 	);
 };
 
+/**
+* Add Movie to User Watch List
+* @param {string} userId
+* @param {string} movieId
+* @returns {object} user
+* @throws {error} err
+*/
 exports.addToWatchList = function(req, res) {
 	db.connect(config.database);
 	var movieList = { movieId: req.body.movieId };
@@ -101,6 +140,12 @@ exports.addToWatchList = function(req, res) {
 	);
 };
 
+/**
+* Get User Watch List
+* @param {string} userId
+* @returns {array} watchList
+* @throws {error} err
+*/
 exports.getWatchList = function(req, res) {
 	db.connect(config.database);
 	User.findById(req.params.userId)
@@ -117,6 +162,13 @@ exports.getWatchList = function(req, res) {
 		});
 };
 
+/**
+* Remove Movie from User Watch List
+* @param {string} userId
+* @param {string} movieId
+* @returns {object} user
+* @throws {error} err
+*/
 exports.removeFromWatchList = function(req, res) {
 	db.connect(config.database);
 	User.findByIdAndUpdate(
@@ -133,6 +185,12 @@ exports.removeFromWatchList = function(req, res) {
 	);
 };
 
+/**
+* Delete User
+* @param {string} userId
+* @returns {object} status, message
+* @throws {error} err
+*/
 exports.deleteUser = function(req, res) {
 	db.connect(config.database);
 	User.findByIdAndRemove({ _id: req.params.userId }, function(err) {

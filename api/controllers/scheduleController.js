@@ -4,6 +4,12 @@ var mongoose = require('mongoose'),
 	db = require('../../config/database'),
 	config = require('../../config/config');
 
+/**
+* Add movie schedule
+* @param {object} Schedule
+* @return {object} schedule
+* @throws {error} err
+*/
 exports.addMovieSchedule = function(req, res) {
 	db.connect(config.database);
 	var newSchedule = new Schedule(req.body);
@@ -21,6 +27,11 @@ exports.addMovieSchedule = function(req, res) {
 		});
 };
 
+/**
+* Show all movie schedules
+* @returns {object} schedule
+* @throws {error} err
+*/
 exports.showAllSchedules = function(req, res) {
 	db.connect(config.database);
 	Schedule.find(req.query)
@@ -36,6 +47,12 @@ exports.showAllSchedules = function(req, res) {
 		});
 };
 
+/**
+* Show move schedule
+* @param {string} movieId
+* @returns {object} movieSchedule
+* @throws {error} err
+*/
 exports.showMovieSchedule = function(req, res) {
 	//console.log(req.params.movieId);
 	db.connect(config.database);

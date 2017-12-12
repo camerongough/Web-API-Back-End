@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>movieController.js - Documentation</title>
+    <title>userController.js - Documentation</title>
 
     <script src="scripts/prettify/prettify.js"></script>
     <script src="scripts/prettify/lang-css.js"></script>
@@ -27,7 +27,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">movieController.js</h1>
+    <h1 class="page-title">userController.js</h1>
     
 
     
@@ -38,48 +38,26 @@
     <section>
         <article>
             <pre class="prettyprint source linenums"><code>'use strict';
+
 var mongoose = require('mongoose'),
-	Movies = mongoose.model('Movies'),
 	db = require('../../config/database'),
 	config = require('../../config/config'),
-	rp = require('request-promise');
+	User = mongoose.model('User');
 
 /**
-* Gets movie id from MovieDB
-* @param {string} movie
-* @param {number} year
-* @returns {object} movieId, title
+* Find User by ID
+* @param {string} userId
+* @returns {object} user
 * @throws {error} err
 */
-exports.findMovieFromMovieDB = function(req, res) {
-	var movieName = req.query.movie;
-	var yearOf = req.query.year;
-	var options = {
-		method: 'GET',
-		url: 'https://api.themoviedb.org/3/search/movie',
-		qs: {
-			year: yearOf,
-			include_adult: 'false',
-			page: '1',
-			query: movieName,
-			language: 'en-UK',
-			api_key: 'c0cab9b0205b7428fc5b85413f00f8c3'
-		},
-		body: '{}'
-	};
-	rp(options)
-		.then(function(body) {
-			var jsonContent = JSON.parse(body);
-			var content = jsonContent.results;
-
-			for (var item of content) {
-				var movieId = item.id;
-				var title = item.title;
-				break;
-			}
+exports.findUserById = function(req, res) {
+	db.connect(config.database);
+	User.findById(req.params.userId)
+		.then(function(user) {
 			res.status(200).json({
-				movieId: movieId,
-				title: title
+				status: 'success',
+				data: user,
+				message: 'Retrieved User Details By ID'
 			});
 		})
 		.catch(function(err) {
@@ -88,98 +66,19 @@ exports.findMovieFromMovieDB = function(req, res) {
 };
 
 /**
-* Gets movie details from MovieDB
-* @param {number} movieId
-* @returns {object} movie
+* Find User by Email
+* @param {string} email
+* @returns {object} user
 * @throws {error} err
 */
-exports.getMovieDetailsFromMovieDB = function(req, res) {
-	var options = {
-		method: 'GET',
-		url: 'https://api.themoviedb.org/3/movie/' + req.query.movieId,
-		qs: {
-			append_to_response: 'release_dates,credits',
-			language: 'en-UK',
-			api_key: 'c0cab9b0205b7428fc5b85413f00f8c3'
-		},
-		body: '{}'
-	};
-	rp(options)
-		.then(function(body) {
-			var detailsBody = JSON.parse(body);
-			var movieId = detailsBody.id;
-			var movieTitle = detailsBody.title;
-			var movieReleaseDate = detailsBody.release_date;
-			var movieOverview = detailsBody.overview;
-			var movieRuntime = detailsBody.runtime;
-			var moviePosterPath = detailsBody.poster_path;
-			var movieHomepage = detailsBody.homepage;
-
-			var certResults = detailsBody.release_dates.results;
-			for (var item of certResults) {
-				if (item.iso_3166_1 === 'GB') {
-					var releaseDates = item.release_dates;
-					for (var jtem of releaseDates) {
-						var movieCertification = jtem.certification;
-						break;
-					}
-				}
-			}
-
-			var creditResults = detailsBody.credits.cast;
-			var k = 0;
-			var cast = [];
-			for (item of creditResults) {
-				cast.push(item.name);
-				k++;
-				if (k === 3) {
-					break;
-				}
-			}
-
-			var cast1 = cast[0];
-			var cast2 = cast[1];
-			var cast3 = cast[2];
-
-			var crewResults = detailsBody.credits.crew;
-			for (item of crewResults) {
-				if (item.job === 'Director') {
-					var movieDirector = item.name;
-					break;
-				}
-			}
-
-			res.status(200).json({
-				movie_id: movieId,
-				title: movieTitle,
-				release_date: movieReleaseDate,
-				overview: movieOverview,
-				runtime: movieRuntime,
-				poster_path: moviePosterPath,
-				homepage: movieHomepage,
-				certification: movieCertification,
-				cast: [cast1, cast2, cast3],
-				director: movieDirector
-			});
-		})
-		.catch(function(err) {
-			res.send(err);
-		});
-};
-
-/**
-* Shows all movies
-* @returns {object} movie
-* @throws {error} err
-*/
-exports.showAllMovies = function(req, res) {
+exports.findUserByEmail = function(req, res) {
 	db.connect(config.database);
-	Movies.find(req.query)
-		.then(function(movie) {
+	User.find({ email: req.body.email })
+		.then(function(user) {
 			res.status(200).json({
 				status: 'success',
-				data: movie,
-				message: 'Retrieved All Movies'
+				data: user,
+				message: 'Retrieved User Details By Email'
 			});
 		})
 		.catch(function(err) {
@@ -188,86 +87,156 @@ exports.showAllMovies = function(req, res) {
 };
 
 /**
-* Adds new movie to the database
-* @param {object} Movies
-* @return {object} movie
+* Add Movie to User Favourites List
+* @param {string} userId
+* @param {string} movieId
+* @returns {object} user
 * @throws {error} err
 */
-exports.addMovie = function(req, res) {
+exports.addToFavList = function(req, res) {
 	db.connect(config.database);
-	var newMovie = new Movies(req.body);
-	newMovie
-		.save()
-		.then(function(movie) {
+	var movieList = { movieId: req.body.movieId };
+	User.findByIdAndUpdate(
+		{ _id: req.params.userId },
+		{ $push: { favList: movieList } },
+		function(user, err) {
+			if (err) res.send(err);
 			res.status(201).json({
 				status: 'success',
-				data: movie,
-				message: 'Added new Movie'
-			});
-		})
-		.catch(function(err) {
-			res.send(err);
-		});
-};
-
-/**
-* Returns a movies
-* @param {string} movieId -
-* @returns {object} movie
-* @throws {error} err
-*/
-exports.showMovie = function(req, res) {
-	db.connect(config.database);
-	Movies.findById(req.params.movieId)
-		.then(function(movie) {
-			res.status(200).json({
-				status: 'success',
-				movie: movie,
-				message: 'Retrieved movie'
-			});
-		})
-		.catch(function(err) {
-			return res.send(err);
-		});
-};
-
-/**
-* Updates a movies
-* @param {string} movieId
-* @param {object} movies
-* @returns {object} movie
-* @throws {error} err
-*/
-exports.updateMovie = function(req, res) {
-	db.connect(config.database);
-	Movies.findOneAndUpdate(
-		{ _id: req.params.movieId },
-		req.body,
-		{ new: true },
-		function(movie, err) {
-			if (err) return res.send(err);
-			res.status(200).json({
-				status: 'success',
-				movie: movie,
-				message: 'Updated movie'
+				data: user,
+				message: 'Added movie to Favs List'
 			});
 		}
 	);
 };
 
 /**
-* Deletes a Movies
+* Get User Favourites List
+* @param {string} userId
+* @returns {array} favList
+* @throws {error} err
+*/
+exports.getFavList = function(req, res) {
+	db.connect(config.database);
+	User.findById(req.params.userId)
+		.then(function(user) {
+			var favList = user.favList;
+			res.status(200).json({
+				status: 'success',
+				data: favList,
+				message: 'Recieved User Fav List'
+			});
+		})
+		.catch(function(err) {
+			return res.send(err);
+		});
+};
+
+/**
+* Remove Movie from User Favourites List
+* @param {string} userId
 * @param {string} movieId
+* @returns {object} user
+* @throws {error} err
+*/
+exports.removeFromFavList = function(req, res) {
+	db.connect(config.database);
+	User.findByIdAndUpdate(
+		{ _id: req.params.userId },
+		{ $pull: { favList: { movieId: req.body.movieId } } },
+		function(user, err) {
+			if (err) res.send(err);
+			res.status(200).json({
+				status: 'success',
+				data: user,
+				message: 'Removed Movie from Fav List'
+			});
+		}
+	);
+};
+
+/**
+* Add Movie to User Watch List
+* @param {string} userId
+* @param {string} movieId
+* @returns {object} user
+* @throws {error} err
+*/
+exports.addToWatchList = function(req, res) {
+	db.connect(config.database);
+	var movieList = { movieId: req.body.movieId };
+	User.findByIdAndUpdate(
+		{ _id: req.params.userId },
+		{ $push: { watchList: movieList } },
+		function(user, err) {
+			if (err) res.send(err);
+			res.status(201).json({
+				status: 'success',
+				data: user,
+				message: 'Added movie to Watch List'
+			});
+		}
+	);
+};
+
+/**
+* Get User Watch List
+* @param {string} userId
+* @returns {array} watchList
+* @throws {error} err
+*/
+exports.getWatchList = function(req, res) {
+	db.connect(config.database);
+	User.findById(req.params.userId)
+		.then(function(user) {
+			var watchList = user.watchList;
+			res.status(200).json({
+				status: 'success',
+				data: watchList,
+				message: 'Recieved User Watch List'
+			});
+		})
+		.catch(function(err) {
+			return res.send(err);
+		});
+};
+
+/**
+* Remove Movie from User Watch List
+* @param {string} userId
+* @param {string} movieId
+* @returns {object} user
+* @throws {error} err
+*/
+exports.removeFromWatchList = function(req, res) {
+	db.connect(config.database);
+	User.findByIdAndUpdate(
+		{ _id: req.params.userId },
+		{ $pull: { watchList: { movieId: req.body.movieId } } },
+		function(user, err) {
+			if (err) res.send(err);
+			res.status(200).json({
+				status: 'success',
+				data: user,
+				message: 'Removed Movie from Watch List'
+			});
+		}
+	);
+};
+
+/**
+* Delete User
+* @param {string} userId
 * @returns {object} status, message
 * @throws {error} err
 */
-exports.deleteMovie = function(req, res) {
+exports.deleteUser = function(req, res) {
 	db.connect(config.database);
-	Movies.findByIdAndRemove({ _id: req.params.movieId }, function(err) {
+	User.findByIdAndRemove({ _id: req.params.userId }, function(err) {
 		if (err) res.send(err);
 		res.status(200).json({
 			status: 'success',
-			message: 'Movie deleted successfully'
+			message: 'User deleted'
 		});
 	});
 };

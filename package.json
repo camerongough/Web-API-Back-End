@@ -6,7 +6,7 @@
   "scripts": {
     "test": "jasmine",
     "start": "nodemon server.js",
-		"generate-docs": "node_modules/.bin/jsdoc -c jsdoc.json"
+    "generate-docs": "node_modules/.bin/jsdoc -c jsdoc.json"
   },
   "repository": {
     "type": "git",
@@ -17,7 +17,10 @@
   "devDependencies": {
     "docdash": "^0.4.0",
     "jasmine": "^2.8.0",
+    "jasmine-core": "^2.8.0",
     "jsdoc": "^3.5.5",
+    "karma-firefox-launcher": "^1.1.0",
+    "karma-jasmine": "^1.1.1",
     "nodemon": "^1.12.1"
   },
   "dependencies": {
@@ -35,6 +38,7 @@
     "express-session": "^1.15.6",
     "jsonwebtoken": "^8.1.0",
     "jwt-blacklist": "0.0.2",
+    "karma": "^1.7.1",
     "mongoose": "^4.12.1",
     "mongoose-dateonly": "^1.0.4",
     "morgan": "^1.9.0",

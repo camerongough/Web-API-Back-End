@@ -52,7 +52,9 @@ app.use(
 	})
 );
 
-//API Models
+/**
+* API Models
+*/
 /* eslint-disable */
 var Movie = require('./api/models/movieModel'),
 	User = require('./api/models/userModel'),
@@ -70,5 +72,6 @@ var scheduleRoutes = require('./api/routes/scheduleRoutes');
 scheduleRoutes(app);
 
 app.listen(port);
-https.createServer(options, app).listen(httpsPort);
+var server = https.createServer(options, app).listen(httpsPort);
 //console.log('Cinema RESTful API server started on: ' + port + ' & ' + httpsPort);
+module.exports = server;
