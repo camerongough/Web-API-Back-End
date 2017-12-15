@@ -1,5 +1,6 @@
 'use strict';
-var mongoose = require('mongoose');
+var mongoose = require('mongoose'),
+	mongoosePaginate = require('mongoose-paginate');
 
 var MoviesSchema = new mongoose.Schema({
 	movie_id: {
@@ -44,5 +45,7 @@ var MoviesSchema = new mongoose.Schema({
 		}
 	]
 });
+
+MoviesSchema.plugin(mongoosePaginate);
 
 module.exports = mongoose.model('Movies', MoviesSchema);

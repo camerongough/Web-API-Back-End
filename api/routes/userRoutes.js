@@ -4,23 +4,23 @@ module.exports = function(app) {
 	var auth = require('../controllers/authController');
 
 	app
-		.route('api/v1/user/:email')
+		.route('/api/v1/user')
 		.get(auth.authorize, user.findUserByEmail);
-		
+
 	app
 		.route('/api/v1/user/:userId')
 		.get(auth.authorize, user.findUserById)
-		.delete(user.deleteUser);
+		.delete(auth.authorize, user.deleteUser);
 	//.patch(auth.authorize, user.updateUserDetails)
 
 	app
-		.route('/api/v1/user/:userId/favourite_list')
+		.route('/api/v1/user/favourite_list')
 		.get(user.getFavList)
 		.post(user.addToFavList)
 		.put(user.removeFromFavList);
 
 	app
-		.route('/api/v1/user/:userId/watch_list')
+		.route('/api/v1/user/watch_list')
 		.get(user.getWatchList)
 		.post(user.addToWatchList)
 		.put(user.removeFromWatchList);

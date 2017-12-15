@@ -2,7 +2,7 @@
 module.exports = function(app) {
 	var auth = require('../controllers/authController');
 
-	// auth Routes
+	/* auth Routes */
 	app.route('/api/v1/auth/register').post(auth.registerUser);
 
 	app.route('/api/v1/auth/login').post(auth.loginUser);
@@ -11,5 +11,9 @@ module.exports = function(app) {
 
 	app.route('/api/v1/auth/logout').post(auth.logout);
 
-	app.route('/auth/forgot_password').post(auth.forgotPassword);
+	app.route('/api/v1/auth/profile').get(auth.getProfile);
+
+	//app.route('/api/v1/auth/forgot_password').post(auth.forgotPassword);
+
+	//app.route('/api/v1/auth/reset_password').post(auth.resetPassword);
 };

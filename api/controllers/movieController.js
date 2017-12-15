@@ -17,16 +17,14 @@ var mongoose = require('mongoose'),
  * @throws {error} err
  */
 exports.findMovieFromMovieDB = function(req, res) {
-	var movieName = req.query.movie;
-	var yearOf = req.query.year;
 	var options = {
 		method: 'GET',
 		url: 'https://api.themoviedb.org/3/search/movie',
 		qs: {
-			year: yearOf,
+			year: req.query.year,
 			include_adult: 'false',
 			page: '1',
-			query: movieName,
+			query: req.query.movie,
 			language: 'en-UK',
 			api_key: 'c0cab9b0205b7428fc5b85413f00f8c3'
 		},
@@ -44,7 +42,7 @@ exports.findMovieFromMovieDB = function(req, res) {
 			}
 			res.status(200).json({
 				movieId: movieId,
-				title: title
+				movieTitle: title
 			});
 		})
 		.catch(function(err) {
@@ -55,7 +53,7 @@ exports.findMovieFromMovieDB = function(req, res) {
 /**
  * Gets movie details from MovieDB
  * @param {number} movieId - The Movie ID from The MovieDB
- * @returns {object} movie - The full details of the movie
+ * @return {object} movie - The full details of the movie
  * @throws {error} err
  */
 exports.getMovieDetailsFromMovieDB = function(req, res) {
@@ -134,8 +132,9 @@ exports.getMovieDetailsFromMovieDB = function(req, res) {
 
 /**
  * Shows all movies
- * @return {status} success
+ * @return {string} status
  * @return {object} movie - All Movie Ojects
+ * @return {string} status
  * @throws {error} err
  */
 exports.showAllMovies = function(req, res) {
@@ -154,17 +153,40 @@ exports.showAllMovies = function(req, res) {
 };
 
 /**
+ * Shows all movies
+ * @param {string} page - Page Number
+ * @return {string} status
+ * @return {object} movie - All Movie Ojects limited at 10 at a time.
+ * @throws {error} err
+ */
+exports.showAllMoviesPageinate = function(req, res) {
+	db.connect(config.database);
+	var page = parseInt(req.query.page);
+	Movies.paginate({}, { page: page, limit: 10 })
+		.then(function(movie) {
+			var test = 'Retrieved All Movies, Page: ' + page + ' of ' + movie.pages;
+			res.status(200).json({
+				status: 'success',
+				data: movie.docs,
+				message: test
+			});
+		})
+		.catch(function(err) {
+			res.send(err);
+		});
+};
+
+/**
  * Adds new movie to the database
  * @param {object} Movies - Movie Object defined in Movie Schema
- * @return {status} success
+ * @return {string} status
  * @return {object} movie
  * @throws {error} err
  */
 exports.addMovie = function(req, res) {
 	db.connect(config.database);
 	var newMovie = new Movies(req.body);
-	newMovie
-		.save()
+	newMovie.save()
 		.then(function(movie) {
 			res.status(201).json({
 				status: 'success',
@@ -180,7 +202,8 @@ exports.addMovie = function(req, res) {
 /**
  * Returns a Movie
  * @param {string} movieId - Movie ID
- * @returns {object} movie - Movie Details
+ * @return {object} movie - Movie Details
+ * @return {string} status
  * @throws {error} err
  */
 exports.showMovie = function(req, res) {
@@ -199,12 +222,12 @@ exports.showMovie = function(req, res) {
 };
 
 /**
-* Search for movie title
-* @param {string} movie - Movie title
-* @return {object} movie - Movie (or movies) that match title
-* @return {status}
-* @throws {error} err
-*/
+ * Search for movie title
+ * @param {string} movie - Movie title
+ * @return {object} movie - Movie (or movies) that match title
+ * @return {string} status
+ * @throws {error} err
+ */
 exports.searchMovieTitle = function(req, res) {
 	db.connect(config.database);
 	Movies.find({ $text: { $search: req.query.movie } })
@@ -232,7 +255,7 @@ exports.searchMovieTitle = function(req, res) {
  * @param {string} movieId - Movie ID
  * @param {object} movie - Updated Movie Object
  * @return {object} movie - Updated Movie Details
- * @return {status}
+ * @return {string} status
  * @throws {error} err
  */
 exports.updateMovie = function(req, res) {
@@ -255,7 +278,7 @@ exports.updateMovie = function(req, res) {
 /**
  * Deletes a Movies
  * @param {string} movieId - Movie ID
- * @return {status} success
+ * @return {string} status
  * @throws {error} err
  */
 exports.deleteMovie = function(req, res) {

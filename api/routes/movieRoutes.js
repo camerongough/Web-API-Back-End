@@ -6,7 +6,7 @@ module.exports = function(app) {
 	/** movie Routes */
 	app
 		.route('/api/v1/movies')
-		.post(auth.isAdmin, movies.addMovie)
+		.post(movies.addMovie)
 		.get(movies.showAllMovies);
 
 	app
@@ -24,6 +24,6 @@ module.exports = function(app) {
 	app
 		.route('/api/v1/movies/:movieId')
 		.get(movies.showMovie)
-		.put(auth.authorize, movies.updateMovie)
-		.delete(auth.authorize, movies.deleteMovie);
+		.put(auth.isAdmin, movies.updateMovie)
+		.delete(auth.isAdmin, movies.deleteMovie);
 };
