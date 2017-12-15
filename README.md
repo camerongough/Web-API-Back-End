@@ -18,4 +18,4 @@ API available [here](https://api.camerongough.co.uk/api/v1/)
 
 ## Live Application:
 
-Available [here](https://cinema.camerongough.co.uk)
+Available [here](https://camerongough.github.io/)
