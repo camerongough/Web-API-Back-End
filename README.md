@@ -12,7 +12,6 @@ Respository for 304CEM Backend code.
 ## Documentation:
 Full API Documentation available [here](https://github.coventry.ac.uk/pages/304CEM-1718OCTJAN/5457955-BackEnd/index.html)
 
-API available [here](https://api.camerongough.co.uk/api/v1/)
 
 ----------
 
