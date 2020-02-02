@@ -36,7 +36,7 @@
     "jsonwebtoken": "^8.1.0",
     "jwt-blacklist": "0.0.2",
     "karma": "^1.7.1",
-    "mongoose": "^4.12.1",
+    "mongoose": "^5.7.5",
     "mongoose-dateonly": "^1.0.4",
     "mongoose-paginate": "^5.0.3",
     "morgan": "^1.9.0",
